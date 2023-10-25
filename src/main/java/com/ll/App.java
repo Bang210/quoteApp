@@ -48,9 +48,14 @@ class App {
             //삭제 명령
             else if (cmd.substring(0, 2).equals("삭제") == true) {
                 delNum = Integer.parseInt(cmd.substring(6, cmd.length()));
-                quotes.remove(delNum - 1);
-                writers.remove(delNum - 1);
-                System.out.printf("%d번 명령이 삭제되었습니다.\n", delNum);
+                if (delNum > 0 && delNum <= quotes.size()) {
+                    quotes.remove(delNum - 1);
+                    writers.remove(delNum - 1);
+                    System.out.printf("%d번 명령이 삭제되었습니다.\n", delNum);
+                }
+                else {
+                    System.out.printf("%d번 명령은 존재하지 않습니다.\n", delNum);
+                }
             }
         }
     }
