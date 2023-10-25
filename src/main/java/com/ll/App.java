@@ -8,6 +8,7 @@ class App {
     List<String> quotes = new ArrayList<>();
     List<String> writers = new ArrayList<>();
     int delNum;
+    int crrNum;
     void run() {
         //초기 메시지
         System.out.println("==명언 앱==");
@@ -51,10 +52,27 @@ class App {
                 if (delNum > 0 && delNum <= quotes.size()) {
                     quotes.remove(delNum - 1);
                     writers.remove(delNum - 1);
-                    System.out.printf("%d번 명령이 삭제되었습니다.\n", delNum);
+                    System.out.printf("%d번 명언이 삭제되었습니다.\n", delNum);
                 }
                 else {
-                    System.out.printf("%d번 명령은 존재하지 않습니다.\n", delNum);
+                    System.out.printf("%d번 명언은 존재하지 않습니다.\n", delNum);
+                }
+            }
+
+            //수정 명령
+            else if (cmd.substring(0, 2).equals("수정") == true) {
+                crrNum = Integer.parseInt(cmd.substring(6, cmd.length()));
+                if (crrNum > 0 && crrNum <= quotes.size()) {
+                    System.out.printf("명언(기존): %s\n명언: ", quotes.get(crrNum - 1));
+                    cmd = scanner.next();
+                    quotes.set(crrNum - 1, cmd);
+                    System.out.printf("작가(기존): %s\n작가: ", writers.get(crrNum - 1));
+                    cmd = scanner.next();
+                    writers.set(crrNum - 1, cmd);
+                    System.out.printf("%d번 명언이 수정되었습니다.\n", crrNum);
+                }
+                else {
+                    System.out.printf("%d번 명언은 존재하지 않습니다.\n", crrNum);
                 }
             }
         }
