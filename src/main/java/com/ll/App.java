@@ -7,6 +7,7 @@ import java.util.Scanner;
 class App {
     List<String> quotes = new ArrayList<>();
     List<String> writers = new ArrayList<>();
+    int delNum;
     void run() {
         //초기 메시지
         System.out.println("==명언 앱==");
@@ -42,6 +43,14 @@ class App {
                 for (int i = 0; i < quotes.size(); i++) {
                     System.out.printf("%d / %s / %s\n", i + 1, writers.get(i), quotes.get(i));
                 }
+            }
+
+            //삭제 명령
+            else if (cmd.substring(0, 2).equals("삭제") == true) {
+                delNum = Integer.parseInt(cmd.substring(6, cmd.length()));
+                quotes.remove(delNum - 1);
+                writers.remove(delNum - 1);
+                System.out.printf("%d번 명령이 삭제되었습니다.\n", delNum);
             }
         }
     }
