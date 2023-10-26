@@ -1,5 +1,9 @@
 package com.ll;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -19,6 +23,8 @@ class App {
     }
 
     void run() {
+        //불러오기
+        load();
 
         //초기 메시지
         System.out.println("==명언 앱==");
@@ -31,6 +37,7 @@ class App {
 
             //종료 명령
             if (cmd.equals("종료")) {
+                save();
                 break;
             }
 
@@ -111,6 +118,7 @@ class App {
     }
 
     int parsing(String query, String paramName, int defaultValue) {
+        //입력받은 명령 뒤의 "id=??"를 분리하는 작업
         String[] split0 = query.split("\\?", 2);
         String action = split0[0];
         String queryString = split0[1];
@@ -125,9 +133,69 @@ class App {
             } catch (NumberFormatException e) {
                 return defaultValue;
             }
-        }
-        else {
+        } else {
             return defaultValue;
+        }
+    }
+
+    void save() {
+        //외부 txt파일에 데이터를 저장하기
+        File file = new File("quotes.txt");
+        File file2 = new File("writers.txt");
+
+        //quotes.txt 파일에 명언 목록을 저장
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            for (int i = 0; i < quotes.size(); i++) {
+                byte[] bytes = (quotes.get(i) + "&").getBytes();
+                fos.write(bytes);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //writers.txt 파일에 작가 목록을 저장
+        try (FileOutputStream fos = new FileOutputStream(file2)) {
+            for (int i = 0; i < writers.size(); i++) {
+                byte[] bytes = (writers.get(i) + "&").getBytes();
+                fos.write(bytes);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void load() {
+        File file = new File("quotes.txt");
+        File file2 = new File("writers.txt");
+
+        //명언 불러오기
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] data = new byte[(int)file.length()];
+            fis.read(data);
+            String content = new String(data);
+            String[] Q = content.split("&");
+            for (int i = 0; i < Q.length; i++) {
+                quotes.add(Q[i]);
+            }
+            System.out.println("명언 데이터를 불러옵니다.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("데이터를 불러오지 못했습니다.");
+        }
+
+        //작가 불러오기
+        try (FileInputStream fis = new FileInputStream(file2)) {
+            byte[] data = new byte[(int)file2.length()];
+            fis.read(data);
+            String content = new String(data);
+            String[] W = content.split("&");
+            for (int i = 0; i < W.length; i++) {
+                writers.add(W[i]);
+            }
+            System.out.println("작가 데이터를 불러옵니다.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("데이터를 불러오지 못했습니다.");
         }
     }
 }
