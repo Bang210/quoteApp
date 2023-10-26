@@ -9,10 +9,10 @@ class App {
     List<String> writers = new ArrayList<>();
     int delNum;
     int crrNum;
+
     void run() {
         //초기 메시지
         System.out.println("==명언 앱==");
-
 
         while (true) {
             //명령 입력받기
@@ -38,7 +38,7 @@ class App {
             }
 
             //목록 명령
-            else if (cmd.equals("목록") == true) {
+            else if (cmd.equals("목록")) {
                 System.out.println("번호 / 작가 / 명언");
                 System.out.println("-----------------------------");
                 for (int i = 0; i < quotes.size(); i++) {
@@ -47,20 +47,19 @@ class App {
             }
 
             //삭제 명령
-            else if (cmd.substring(0, 2).equals("삭제") == true) {
+            else if (cmd.substring(0, 2).equals("삭제")) {
                 delNum = Integer.parseInt(cmd.substring(6, cmd.length()));
                 if (delNum > 0 && delNum <= quotes.size()) {
                     quotes.remove(delNum - 1);
                     writers.remove(delNum - 1);
                     System.out.printf("%d번 명언이 삭제되었습니다.\n", delNum);
-                }
-                else {
+                } else {
                     System.out.printf("%d번 명언은 존재하지 않습니다.\n", delNum);
                 }
             }
 
             //수정 명령
-            else if (cmd.substring(0, 2).equals("수정") == true) {
+            else if (cmd.substring(0, 2).equals("수정")) {
                 crrNum = Integer.parseInt(cmd.substring(6, cmd.length()));
                 if (crrNum > 0 && crrNum <= quotes.size()) {
                     System.out.printf("명언(기존): %s\n명언: ", quotes.get(crrNum - 1));
@@ -70,10 +69,14 @@ class App {
                     cmd = scanner.next();
                     writers.set(crrNum - 1, cmd);
                     System.out.printf("%d번 명언이 수정되었습니다.\n", crrNum);
-                }
-                else {
+                } else {
                     System.out.printf("%d번 명언은 존재하지 않습니다.\n", crrNum);
                 }
+            }
+
+            //존재하지 않는 명령에 대한 예외처리
+            else {
+                System.out.println("유효하지 않은 명령입니다.");
             }
         }
     }
