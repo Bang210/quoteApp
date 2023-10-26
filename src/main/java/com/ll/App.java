@@ -8,8 +8,6 @@ class App {
     //선언
     static List<String> quotes;
     static List<String> writers;
-    int delNum;
-    int crrNum;
     static Scanner scanner;
     static String cmd;
 
@@ -32,23 +30,23 @@ class App {
             System.out.printf("입력받은 명령어: %s\n", cmd);
 
             //종료 명령
-            if (cmd.equals("종료") == true) {
+            if (cmd.equals("종료")) {
                 break;
             }
 
             //등록 명령
-            else if (cmd.equals("등록") == true) {
+            else if (cmd.equals("등록")) {
                 register();
             }
 
             //목록 명령
             else if (cmd.equals("목록")) {
-               listup();
+                listup();
             }
 
             //삭제 명령
             else if (cmd.startsWith("삭제?id=")) {
-                delete();
+                delete(cmd);
             }
 
             //수정 명령
@@ -73,6 +71,7 @@ class App {
         writers.add(cmd);
         System.out.printf("%s번 명언이 등록되었습니다.\n", quotes.size());
     }
+
     void listup() {
         //목록 명령 수행
         System.out.println("번호 / 작가 / 명언");
@@ -81,30 +80,54 @@ class App {
             System.out.printf("%d / %s / %s\n", i + 1, writers.get(i), quotes.get(i));
         }
     }
-    void delete() {
+
+    void delete(String cmd) {
         //삭제 명령 수행
-        delNum = Integer.parseInt(cmd.substring(6, cmd.length()));
-        if (delNum > 0 && delNum <= quotes.size()) {
-            quotes.remove(delNum - 1);
-            writers.remove(delNum - 1);
-            System.out.printf("%d번 명언이 삭제되었습니다.\n", delNum);
+        int id = parsing(cmd, "삭제", 0);
+        if (id > 0 && id <= quotes.size()) {
+            quotes.remove(id - 1);
+            writers.remove(id - 1);
+            System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
         } else {
-            System.out.printf("%d번 명언은 존재하지 않습니다.\n", delNum);
+            System.out.println("해당 번호의 명언은 존재하지 않습니다.");
         }
     }
+
     void correct() {
         //수정 명령 수행
-        crrNum = Integer.parseInt(cmd.substring(6, cmd.length()));
-        if (crrNum > 0 && crrNum <= quotes.size()) {
-            System.out.printf("명언(기존): %s\n명언: ", quotes.get(crrNum - 1));
+        int id = parsing(cmd, "수정", 0);
+        if (id > 0 && id <= quotes.size()) {
+            System.out.printf("명언(기존): %s\n명언: ", quotes.get(id - 1));
             cmd = scanner.next();
-            quotes.set(crrNum - 1, cmd);
-            System.out.printf("작가(기존): %s\n작가: ", writers.get(crrNum - 1));
+            quotes.set(id - 1, cmd);
+            System.out.printf("작가(기존): %s\n작가: ", writers.get(id - 1));
             cmd = scanner.next();
-            writers.set(crrNum - 1, cmd);
-            System.out.printf("%d번 명언이 수정되었습니다.\n", crrNum);
+            writers.set(id - 1, cmd);
+            System.out.printf("%d번 명언이 수정되었습니다.\n", id);
         } else {
-            System.out.printf("%d번 명언은 존재하지 않습니다.\n", crrNum);
+            System.out.println("해당 번호의 명언은 존재하지 않습니다.");
+        }
+
+    }
+
+    int parsing(String query, String paramName, int defaultValue) {
+        String[] split0 = query.split("\\?", 2);
+        String action = split0[0];
+        String queryString = split0[1];
+        String _paramName;
+        int paramId;
+        String[] split1 = queryString.split("=", 2);
+        _paramName = split1[0];
+        paramId = Integer.parseInt(split1[1]);
+        if (paramName.equals(action)) {
+            try {
+                return paramId;
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
+        }
+        else {
+            return defaultValue;
         }
     }
 }
