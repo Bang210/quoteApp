@@ -12,8 +12,8 @@ class App {
     //선언
     static List<String> quotes;
     static List<String> writers;
-    static Scanner scanner;
-    static String cmd;
+    Scanner scanner;
+    String cmd;
 
     //생성자
     App() {
@@ -25,7 +25,11 @@ class App {
     void run() {
         //불러오기
         load();
-
+        //초기화
+        if (quotes.size() == 1 && quotes.get(0).equals("")) {
+            quotes.clear();
+            writers.clear();
+        }
         //초기 메시지
         System.out.println("==명언 앱==");
 
@@ -71,14 +75,15 @@ class App {
     void register() {
         //등록 명령 수행
         System.out.print("명언: ");
-        cmd = scanner.next();
+        cmd = scanner.nextLine();
+        cmd = scanner.nextLine();
         quotes.add(cmd);
         System.out.print("작가: ");
-        cmd = scanner.next();
+        cmd = scanner.nextLine();
+
         writers.add(cmd);
         System.out.printf("%s번 명언이 등록되었습니다.\n", quotes.size());
     }
-
     void listup() {
         //목록 명령 수행
         System.out.println("번호 / 작가 / 명언");
@@ -105,10 +110,11 @@ class App {
         int id = parsing(cmd, "수정", 0);
         if (id > 0 && id <= quotes.size()) {
             System.out.printf("명언(기존): %s\n명언: ", quotes.get(id - 1));
-            cmd = scanner.next();
+            cmd = scanner.nextLine();
+            cmd = scanner.nextLine();
             quotes.set(id - 1, cmd);
             System.out.printf("작가(기존): %s\n작가: ", writers.get(id - 1));
-            cmd = scanner.next();
+            cmd = scanner.nextLine();
             writers.set(id - 1, cmd);
             System.out.printf("%d번 명언이 수정되었습니다.\n", id);
         } else {
@@ -158,6 +164,7 @@ class App {
             for (int i = 0; i < writers.size(); i++) {
                 byte[] bytes = (writers.get(i) + "&").getBytes();
                 fos.write(bytes);
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -170,7 +177,7 @@ class App {
 
         //명언 불러오기
         try (FileInputStream fis = new FileInputStream(file)) {
-            byte[] data = new byte[(int)file.length()];
+            byte[] data = new byte[(int) file.length()];
             fis.read(data);
             String content = new String(data);
             String[] Q = content.split("&");
@@ -185,7 +192,7 @@ class App {
 
         //작가 불러오기
         try (FileInputStream fis = new FileInputStream(file2)) {
-            byte[] data = new byte[(int)file2.length()];
+            byte[] data = new byte[(int) file2.length()];
             fis.read(data);
             String content = new String(data);
             String[] W = content.split("&");
